@@ -40,7 +40,7 @@ def upload_image():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
         flash("Image successfully uploaded and displayed")
-        return {'test': 'test'}
+        return {'status': 'success'}
     else:
         flash("We only accept png, jpg, jpeg, gif")
         return redirect(request.url)
@@ -48,6 +48,12 @@ def upload_image():
 @app.route("/display/<filename>")
 def display_image(filename):
     filepath = 'static/uploads/' + filename
+    return send_file(filepath)
+
+@app.route("/display/defaults/<filename>")
+def display_default_image(filename):
+    print('Filename', filename)
+    filepath = 'static/uploads/defaults/' + filename
     return send_file(filepath)
 
 if __name__ == "__main__":

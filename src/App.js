@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { Spinner } from 'react-bootstrap';
 
 function App() {
   const [time, setTime] = useState(0)
   const [url, setUrl] = useState(null)
+  const [selected, setSelected] = useState('None')
+  const [classifying, setClassifying] = useState(false)
   let fileRef = useRef()
-  let textRef = useRef()
 
   useEffect(() => {
     fetch('/time').then((res) => res.json()).then(data => {
@@ -29,10 +31,9 @@ function App() {
 
   const handleUploadImage = (ev) => {
     ev.preventDefault();
-    console.log('handleUploadImage', fileRef.files[0], textRef.value)
+    console.log('handleUploadImage', fileRef.files[0])
     const data = new FormData();
     data.append('file', fileRef.files[0]);
-    data.append('filename', textRef.value);
     const uploadAndGet = async () => {
       await fetch('/upload', {
         method: 'POST',
@@ -44,26 +45,46 @@ function App() {
     uploadAndGet()
   }
 
-  return (
-    <div className="App">
-        <p>Current Time: {time} </p>
-        <form onSubmit={handleUploadImage}>
-          <div>
-            <input ref={(ref) => { fileRef = ref; }} type="file" />
-          </div>
-          <div>
-            <input ref={(ref) => {textRef = ref; }} type="text" placeholder="Enter the desired name of file" />
+  const handleChange = async (evt) => {
+    const filepath = `/display/defaults/${evt.target.value}.jpeg`
+    await fetch(filepath).then((res) => setUrl(res.url))
+  }
+
+  const run = () => {
+    setClassifying(true)
+  }
+
+  return(
+      <div className="App container mt-4">
+        <h3 className='display-4 text-center mb-4'>Image Classifier</h3>
+        <form class='mb-5 col-8' onSubmit={handleUploadImage}>
+          <div class='form-group'>
+            <input name='fileUpload' class='form-control-file mb-2' ref={(ref) => { fileRef = ref; }} type="file" />
+            <div class='col mb-2 mt-2'>
+              <strong class='row'>Image Size should be less than 500kb</strong>
+              <strong class='row'>Supported Extensions: PNG, JPG, JPEG, GIF</strong>
+            </div>
+            <p>If you don't have an image, you can use some of the images below that we've selected.</p> 
+            <select class="custom-select" onChange={handleChange}>
+              <option selected>Open this select menu</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>   
           </div>
           <br />
           <div>
-            <button type='submit'>Upload</button>
+            <button type='submit' class="btn btn-primary btn-block" value="Upload">Upload</button>
           </div>
         </form>
         {
           url && (
-            <img src={url} />
+            <img class='mb-5' src={url} />
           )
         }
+        <button class="btn btn-success btn-block" value="Classify" onClick={run}>
+          Classify
+        </button>
     </div>
   );
 }

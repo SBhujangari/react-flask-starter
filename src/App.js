@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [time, setTime] = useState(0)
+  useEffect(() => {
+    fetch('/time').then((res) => res.json()).then(data => {
+      setTime(data.time)
+    })
+  }, [])
   return (
     <div className="App">
       <header className="App-header">
@@ -18,6 +24,7 @@ function App() {
         >
           Learn React
         </a>
+        <p>Current Time: {time} </p>
       </header>
     </div>
   );

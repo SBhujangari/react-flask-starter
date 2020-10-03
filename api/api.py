@@ -2,6 +2,7 @@ import time
 import os
 from flask import Flask, request, flash, redirect, url_for, session, send_file
 from werkzeug.utils import secure_filename
+from inference import predict
 
 ALLOWED_EXTENSIONS = set(["png", "jpg", "jpeg", "gif"])
 app = Flask(__name__)
@@ -73,4 +74,7 @@ if __name__ == "__main__":
 @app.route("/classify")
 def classify():
     print('File Path inside classify', filePath)
-    return {'prediction': len(filePath)}
+    x = predict(filePath)
+    print("%.2f" % (x[0]*100)+'%', x[1])
+    return {'prediction': str("%.2f" % (x[0]*100)+'%'+f' chance of {x[1]}')}
+    #return {'prediction': '24alwkejf'}

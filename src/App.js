@@ -8,6 +8,7 @@ function App() {
   const [url, setUrl] = useState(null)
   const [selected, setSelected] = useState('None')
   const [classifying, setClassifying] = useState(false)
+  const [prediction, setPrediction] = useState('')
   let fileRef = useRef()
 
   useEffect(() => {
@@ -45,13 +46,15 @@ function App() {
     uploadAndGet()
   }
 
-  const handleChange = async (evt) => {
-    const filepath = `/display/defaults/${evt.target.value}.jpeg`
-    await fetch(filepath).then((res) => setUrl(res.url))
+  const handleChange = (evt) => {
+    const filepath = `/display/defaults/${evt.target.value}`
+    fetch(filepath).then((res) => setUrl(res.url))
   }
 
   const run = () => {
-    setClassifying(true)
+    fetch('/classify').then((res) => res.json()).then(data => {
+      setPrediction(data.prediction)
+    })
   }
 
   return(
@@ -85,6 +88,7 @@ function App() {
         <button class="btn btn-success btn-block" value="Classify" onClick={run}>
           Classify
         </button>
+        <h1>{prediction}</h1>
     </div>
   );
 }

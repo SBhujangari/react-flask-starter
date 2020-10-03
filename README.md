@@ -1,5 +1,6 @@
-Run:
+### Run
 One terminal: Run npm start
+
 Second terminal: Run npm run start-flask-api
 
 This is a simple flask react app. For demonstration purposes, it displays an unformatted version of time.

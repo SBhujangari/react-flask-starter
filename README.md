@@ -3,7 +3,11 @@ One terminal: Run npm start
 
 Second terminal: Run npm run start-flask-api
 
-This is a simple flask react app. For demonstration purposes, it displays an unformatted version of time.
+This is a simple flask react app. 
+To demonstrate the api, there are some functions inside api.py.
+There is a file upload functionality.
+There is a time get functionality.
+There is a function that returns the params.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
